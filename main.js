@@ -5,38 +5,38 @@ function htmlElements(){
     const headerContainer = document.createElement("div");
     const headerText = document.createElement("h1");
     headerText.textContent = "Etch-a-sketch";
-    // Contains a grid of "pixels" 
+    // Contains a grid of "pixels"
+    // Each row has a number of div "pixel" elements
     const gridContainer = document.createElement("div");
-    // Each container has 16 div "pixel" elements
-    const rowContainer = document.createElement("div");
 
-    for(let i = 0; i < 16; i++){
+    // Default container is 16 x 16 and the color drawn is black
+    createPixelGrid(gridContainer, 16)
+    draw(gridContainer, "black");
+
+    gridContainer.style.display = "flex";
+    container.style.display = "flex";
+    
+    headerContainer.appendChild(headerText);
+
+    container.appendChild(headerContainer);
+    container.appendChild(gridContainer);
+}
+
+function createPixelGrid(gridContainer, gridSize){
+    for(let i = 0; i < gridSize; i++){
         const rowContainer = document.createElement("div");
 
-        for(let j = 0; j < 16; j++){
+        for(let j = 0; j < gridSize; j++){
             const pixelDiv = document.createElement("div");
             pixelDiv.style.height = "15px";
             pixelDiv.style.width = "15px";
             pixelDiv.style.padding = "2.5px";
             pixelDiv.style.border = "1.5px solid black";
             
-
             rowContainer.appendChild(pixelDiv);
         }
         gridContainer.appendChild(rowContainer);
     }
-      
-    draw(gridContainer, "black");
-
-    gridContainer.style.display = "flex";
-    gridContainer.appendChild(rowContainer);
-
-    headerContainer.appendChild(headerText);
-
-    container.style.display = "flex";
-    
-    container.appendChild(headerContainer);
-    container.appendChild(gridContainer);
 }
 
 function draw(container, color){
