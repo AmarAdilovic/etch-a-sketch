@@ -18,10 +18,14 @@ function htmlElements(){
     createButtons(buttonContainer, gridContainer);
 
     gridContainer.style.display = "flex";
+    gridContainer.style.height = "400px";
+    gridContainer.style.width = "400px";
+
+    gridContainer.style.border = "1.5px solid black";
+
     contentContainer.style.display = "flex";
     buttonContainer.style.display = "flex";
     buttonContainer.style.flexDirection = "column";
-    gridContainer.style.border = "1.5px solid black";
 
     container.style.display = "flex";
     container.style.flexDirection = "column";
@@ -43,8 +47,11 @@ function createPixelGrid(gridContainer, gridSize){
 
         for(let j = 0; j < gridSize; j++){
             const pixelDiv = document.createElement("div");
-            pixelDiv.style.height = "20px";
-            pixelDiv.style.width = "20px";
+            pixelDiv.setAttribute("id", "pixelDiv");
+            let paddingOffset = gridSize * 2.5;
+            let heightAndWidth = (400 - (paddingOffset * 2)) / gridSize;
+            pixelDiv.style.height = heightAndWidth + "px";
+            pixelDiv.style.width = heightAndWidth + "px";
             pixelDiv.style.padding = "2.5px";
             
             rowContainer.appendChild(pixelDiv);
@@ -55,12 +62,14 @@ function createPixelGrid(gridContainer, gridSize){
 const drawObject = {color: "black", isDrawing: false };
 
 function mouseDownHandler(e){
-    (e.target).style.backgroundColor = drawObject.color;
-    drawObject.isDrawing = true;
+    if(e.target.id === "pixelDiv"){
+        (e.target).style.backgroundColor = drawObject.color;
+        drawObject.isDrawing = true;
+    }
 }
 
 function mouseMoveHandler(e){
-    if (drawObject.isDrawing === true) {
+    if (drawObject.isDrawing === true && e.target.id === "pixelDiv") {
         (e.target).style.backgroundColor = drawObject.color;
     }
 }
