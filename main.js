@@ -1,15 +1,15 @@
-function htmlElements(){
+function main(){
     // Container for all elements on the page
     const container = document.querySelector(".container");
-    const headerText = document.createElement("h1");
 
     const headerContainer = document.createElement("div");
+    const headerText = document.createElement("h1");
+
     const contentContainer = document.createElement("div");
     contentContainer.setAttribute("id", "contentDiv");
 
     const buttonContainer = document.createElement("div");
     createButtons(buttonContainer);
-    contentContainer.appendChild(buttonContainer);
 
     contentContainer.style.display = "flex";
     buttonContainer.style.display = "flex";
@@ -21,6 +21,8 @@ function htmlElements(){
 
     headerText.textContent = "Etch-a-sketch";
     headerContainer.appendChild(headerText);
+
+    contentContainer.appendChild(buttonContainer);
 
     container.appendChild(headerContainer);
     container.appendChild(contentContainer);
@@ -35,12 +37,12 @@ function createPixelGrid(gridSize){
     const gridContainer = document.createElement("div");
     gridContainer.setAttribute("id", "gridDiv");
     gridContainer.style.display = "flex";
+    // Default size for the grid is a 400px x 400px window
     gridContainer.style.height = "400px";
     gridContainer.style.width = "400px";
     gridContainer.style.border = "1.5px solid black";
 
-    console.log("Grid size: " + gridSize);
-
+    // Nested for loops that set each of the elements in a row first then add that row to the larger gridContainer
     for(let i = 0; i < gridSize; i++){
         const rowContainer = document.createElement("div");
         rowContainer.setAttribute("id", "rowDiv");
@@ -48,6 +50,8 @@ function createPixelGrid(gridSize){
         for(let j = 0; j < gridSize; j++){
             const pixelDiv = document.createElement("div");
             pixelDiv.setAttribute("id", "pixelDiv");
+
+            // Each pixel has a 2.5px padding that must be offset
             let paddingOffset = gridSize * 2.5;
             let heightAndWidth = (400 - (paddingOffset * 2)) / gridSize;
             pixelDiv.style.height = heightAndWidth + "px";
@@ -62,7 +66,6 @@ function createPixelGrid(gridSize){
     draw(gridContainer, "black");
 
     const contentContainer = document.getElementById("contentDiv");
-    console.log(contentContainer.id);
     contentContainer.appendChild(gridContainer);
 
 }
@@ -82,12 +85,12 @@ function removePixelGrid(){
 
     const gridContainer = document.getElementById("gridDiv");
     gridContainer.remove();
-    console.log("Everything removed");
 }
 
 const drawObject = {color: "black", isDrawing: false };
 
 function mouseDownHandler(e){
+    // Must check if a pixelDiv is being selected, or else all divs will be acceptable 
     if(e.target.id === "pixelDiv"){
         (e.target).style.backgroundColor = drawObject.color;
         drawObject.isDrawing = true;
@@ -163,4 +166,4 @@ function createButtons(buttonContainer){
 
 }
 
-htmlElements();
+main();
