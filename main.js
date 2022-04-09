@@ -5,23 +5,11 @@ function htmlElements(){
 
     const headerContainer = document.createElement("div");
     const contentContainer = document.createElement("div");
-    // Contains a grid of "pixels"
-    // Each row has a number of div "pixel" elements
-    const gridContainer = document.createElement("div");
-    gridContainer.setAttribute("id", "gridDiv");
+    contentContainer.setAttribute("id", "contentDiv");
+
     const buttonContainer = document.createElement("div");
-
-    // Default container is 16 x 16 and the color drawn is black
-    createPixelGrid(gridContainer, 16)
-    draw(gridContainer, "black");
-
-    createButtons(buttonContainer, gridContainer);
-
-    gridContainer.style.display = "flex";
-    gridContainer.style.height = "400px";
-    gridContainer.style.width = "400px";
-
-    gridContainer.style.border = "1.5px solid black";
+    createButtons(buttonContainer);
+    contentContainer.appendChild(buttonContainer);
 
     contentContainer.style.display = "flex";
     buttonContainer.style.display = "flex";
@@ -34,16 +22,28 @@ function htmlElements(){
     headerText.textContent = "Etch-a-sketch";
     headerContainer.appendChild(headerText);
 
-    contentContainer.appendChild(buttonContainer);
-    contentContainer.appendChild(gridContainer);
-
     container.appendChild(headerContainer);
     container.appendChild(contentContainer);
+
+    // Default container is 16 x 16 and the color drawn is black
+    createPixelGrid(16);
 }
 
-function createPixelGrid(gridContainer, gridSize){
+function createPixelGrid(gridSize){
+    // Contains a grid of "pixels"
+    // Each row has a number of div "pixel" elements
+    const gridContainer = document.createElement("div");
+    gridContainer.setAttribute("id", "gridDiv");
+    gridContainer.style.display = "flex";
+    gridContainer.style.height = "400px";
+    gridContainer.style.width = "400px";
+    gridContainer.style.border = "1.5px solid black";
+
+    console.log("Grid size: " + gridSize);
+
     for(let i = 0; i < gridSize; i++){
         const rowContainer = document.createElement("div");
+        rowContainer.setAttribute("id", "rowDiv");
 
         for(let j = 0; j < gridSize; j++){
             const pixelDiv = document.createElement("div");
@@ -58,7 +58,33 @@ function createPixelGrid(gridContainer, gridSize){
         }
         gridContainer.appendChild(rowContainer);
     }
+
+    draw(gridContainer, "black");
+
+    const contentContainer = document.getElementById("contentDiv");
+    console.log(contentContainer.id);
+    contentContainer.appendChild(gridContainer);
+
 }
+
+function removePixelGrid(){
+    const rowContainerList = document.querySelectorAll("#rowDiv");
+
+    rowContainerList.forEach(function(rowContainer) {
+        rowContainer.remove();
+    });
+
+    const pixelDivList = document.querySelectorAll("#pixelDiv");
+
+    pixelDivList.forEach(function(pixelDiv) {
+        pixelDiv.remove();
+    });
+
+    const gridContainer = document.getElementById("gridDiv");
+    gridContainer.remove();
+    console.log("Everything removed");
+}
+
 const drawObject = {color: "black", isDrawing: false };
 
 function mouseDownHandler(e){
@@ -73,7 +99,7 @@ function mouseMoveHandler(e){
         (e.target).style.backgroundColor = drawObject.color;
     }
 }
-function mouseUpHandler(e){
+function mouseUpHandler(){
     if (drawObject.isDrawing === true) {
         drawObject.isDrawing = false;
     }
@@ -96,7 +122,7 @@ function getRandomColor() {
     return color;
 }
 
-function createButtons(buttonContainer, gridContainer){
+function createButtons(buttonContainer){
     const resetButton = document.createElement("button");
     resetButton.textContent = "Reset";
     resetButton.addEventListener('click', () => {
@@ -109,6 +135,8 @@ function createButtons(buttonContainer, gridContainer){
     const randomColorButton = document.createElement("button");
     randomColorButton.textContent = "Random Color Mode";
     randomColorButton.addEventListener('click', () => {
+        const gridContainer = document.querySelector("#gridDiv");
+
         gridContainer.removeEventListener('mousedown', mouseDownHandler); 
         gridContainer.removeEventListener('mousemove', mouseMoveHandler);
         window.removeEventListener('mouseup', mouseUpHandler);
@@ -116,9 +144,22 @@ function createButtons(buttonContainer, gridContainer){
         draw(gridContainer, getRandomColor());
     });
 
+    const changeGridSizeButton = document.createElement("button");
+    changeGridSizeButton.textContent = "Change Grid Size";
+    changeGridSizeButton.addEventListener('click', () => {
+        let userNum = Number(window.prompt("Please enter a valid number (1 - 80): ", 16));
+        if(Number.isNaN(userNum) || userNum > 80 || userNum < 1){
+           alert("Invalid entry, please try again!");
+        }
+        else{
+            removePixelGrid();
+            createPixelGrid(userNum);
+        }
+    });
 
     buttonContainer.appendChild(resetButton);
     buttonContainer.appendChild(randomColorButton);
+    buttonContainer.appendChild(changeGridSizeButton);
 
 }
 
